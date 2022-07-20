@@ -1,6 +1,9 @@
 package com.ninos.security.config;
 
+import com.ninos.security.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,9 +16,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
+@AllArgsConstructor
 @EnableWebSecurity
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final UserService userService;
 
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -36,7 +42,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .anyRequest().permitAll()
+                .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+                .antMatchers("/login").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .httpBasic();
 
