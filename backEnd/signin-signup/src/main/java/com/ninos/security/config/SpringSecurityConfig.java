@@ -1,5 +1,7 @@
 package com.ninos.security.config;
 
+import com.ninos.security.dao.UserRepository;
+import com.ninos.security.jwt.filter.JwtAuthorizationFilter;
 import com.ninos.security.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -21,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final UserRepository userRepository;
     private final UserService userService;
 
 
@@ -41,12 +45,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                .antMatchers("/login").permitAll()
-                .anyRequest().authenticated()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .httpBasic();
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(),userRepository))
+                .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers("/login").permitAll()
+                .anyRequest().authenticated();
 
     }
 

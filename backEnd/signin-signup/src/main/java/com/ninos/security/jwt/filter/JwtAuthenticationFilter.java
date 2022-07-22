@@ -3,11 +3,15 @@ package com.ninos.security.jwt.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.ninos.security.dao.RoleRepository;
+import com.ninos.security.dao.UserRepository;
 import com.ninos.security.dto.LoginResponse;
 import com.ninos.security.dto.UserPrincipal;
 import com.ninos.security.dto.JwtLogin;
 import com.ninos.security.jwt.JwtProperties;
 
+import com.ninos.security.model.Role;
+import com.ninos.security.model.User;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,15 +22,28 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+
 @Service
 public class JwtAuthenticationFilter {
 
+    @Autowired
+    private UserRepository userRepository;
 
     private AuthenticationManager authenticationManager;
 
     @Autowired
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
+    }
+
+
+    public LoginResponse login(JwtLogin jwtLogin){
+        Authentication authenticate = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(jwtLogin.getEmail(), jwtLogin.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+
+        String token = generateToken(authenticate);
+        return new LoginResponse(jwtLogin.getEmail(), token);
     }
 
 
@@ -44,14 +61,7 @@ public class JwtAuthenticationFilter {
     }
 
 
-    public LoginResponse login(JwtLogin jwtLogin){
-        Authentication authenticate = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(jwtLogin.getEmail(), jwtLogin.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
 
-        String token = generateToken(authenticate);
-        return new LoginResponse(jwtLogin.getEmail(), token);
-    }
 }
 
 

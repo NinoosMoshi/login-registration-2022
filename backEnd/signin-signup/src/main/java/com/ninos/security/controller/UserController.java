@@ -4,6 +4,7 @@ import com.ninos.security.dto.JwtLogin;
 import com.ninos.security.dto.LoginResponse;
 import com.ninos.security.jwt.filter.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,11 @@ public class UserController {
         return jwtAuthenticationFilter.login(jwtLogin);
     }
 
+
+    @GetMapping("/hi")
+    public String hello(){
+        return "hi ninos";
+    }
 
 
 
