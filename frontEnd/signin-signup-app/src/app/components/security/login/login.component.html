@@ -1,0 +1,46 @@
+<div class="global-container">
+  <div class="card login-form">
+    <div class="card-body">
+       <h1 class="card-title text-center">LOGIN</h1>
+       <div class="card-text">
+
+         <form (ngSubmit)="login()" [formGroup]="formParentGroup">
+          <div formGroupName="user">
+            <div class="form-group">
+              <label for="exampleInputEmail1">Email Address</label>
+              <input formControlName="email" type="email" class="form-control form-control-sm" [ngClass]="{ 'is-invalid': email.errors, 'is-valid':email }" />
+              <!-- start validate email -->
+                  <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="text-danger" >
+                      <div *ngIf="email?.errors?.['required'] || email?.errors?.['noSpace']" class="alert alert-danger " role="alert">Email is required</div>
+                      <div *ngIf="email?.errors?.['pattern']" class="alert alert-danger" role="alert">Email must be a valid email address</div>
+                  </div>
+               <!-- end validate email -->
+            </div>
+
+            <div class="form-group">
+              <label for="exampleInputPassword1">Password</label>
+              <input formControlName="password" type="password" class="form-control form-control-sm" [ngClass]="{ 'is-invalid': password.errors, 'is-valid':password }" />
+               <!-- start validate password -->
+                  <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" >
+                    <div *ngIf="password?.errors?.['required'] || password?.errors?.['noSpace']" class="alert alert-danger" role="alert">
+                      Password Is Required
+                    </div>
+                  </div>
+              <!-- end validate password -->
+            </div>
+
+            <div class="d-grid ">
+              <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            </div>
+
+            <div class="signup">
+                Don't have an account?  <a routerLink="/registration">Create One</a>
+            </div>
+          </div>
+         </form>
+
+       </div>
+    </div>
+  </div>
+</div>
+
