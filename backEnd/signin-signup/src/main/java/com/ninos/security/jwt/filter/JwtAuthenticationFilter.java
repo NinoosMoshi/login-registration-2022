@@ -11,7 +11,9 @@ import com.ninos.security.jwt.JwtProperties;
 
 import com.ninos.security.model.Role;
 import com.ninos.security.model.User;
+import com.ninos.security.service.RoleService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,25 +24,22 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-
+@AllArgsConstructor
 @Service
 public class JwtAuthenticationFilter {
 
-    @Autowired
-    private UserRepository userRepository;
 
-    private AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
+    private final RoleService roleService;
 
-    @Autowired
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
 
 
     public LoginResponse login(JwtLogin jwtLogin){
         Authentication authenticate = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(jwtLogin.getEmail(), jwtLogin.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
+
 
         String token = generateToken(authenticate);
         return new LoginResponse(jwtLogin.getEmail(), token);

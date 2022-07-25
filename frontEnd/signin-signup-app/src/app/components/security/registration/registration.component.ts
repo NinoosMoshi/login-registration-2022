@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SpaceValidator } from 'src/app/model/space-validator';
+import { AuthenticationService } from 'src/app/services/security/authentication.service';
 
 @Component({
   selector: 'app-registration',
@@ -12,7 +13,9 @@ export class RegistrationComponent implements OnInit {
 
   formParentGroup : FormGroup;
 
-  constructor(private formChildGroup: FormBuilder,private router: Router) { }
+  constructor(private formChildGroup: FormBuilder,
+              private router: Router,
+              private authenticationService: AuthenticationService) { }
 
   ngOnInit(): void {
     this.mySignupForm();
@@ -42,6 +45,22 @@ export class RegistrationComponent implements OnInit {
       this.formParentGroup.markAllAsTouched()
       return;
    }
+
+    this.authenticationService.createUser(
+      this.formParentGroup.controls['user'].value.email,
+      this.formParentGroup.controls['user'].value.password
+    ).subscribe({
+      next: response =>{
+        this.router.navigateByUrl("/login")
+      },
+      error: err =>{
+
+      }
+    })
+
+
+
+
   }
 
 
