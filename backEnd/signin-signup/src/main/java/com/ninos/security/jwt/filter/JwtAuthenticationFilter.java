@@ -2,19 +2,16 @@ package com.ninos.security.jwt.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.ninos.security.dao.RoleRepository;
 import com.ninos.security.dao.UserRepository;
 import com.ninos.security.dto.LoginResponse;
+import com.ninos.security.dto.RoleModel;
 import com.ninos.security.dto.UserPrincipal;
 import com.ninos.security.dto.JwtLogin;
 import com.ninos.security.jwt.JwtProperties;
 
-import com.ninos.security.model.Role;
 import com.ninos.security.model.User;
 import com.ninos.security.service.RoleService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -40,10 +37,24 @@ public class JwtAuthenticationFilter {
                 .authenticate(new UsernamePasswordAuthenticationToken(jwtLogin.getEmail(), jwtLogin.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
+        LoginResponse loginResponse = new LoginResponse();
+        User user = userRepository.findUserByEmail(jwtLogin.getEmail());
+        List<RoleModel> roles = getRoleList(user);
 
         String token = generateToken(authenticate);
-        return new LoginResponse(jwtLogin.getEmail(), token);
+        return new LoginResponse(jwtLogin.getEmail(), token, roles);
     }
+
+    private List<RoleModel> getRoleList(User user){
+        List<RoleModel> roleList = new ArrayList<>();
+        for(int i=0; i< user.getRoles().size(); i++) {
+            RoleModel roleModel = new RoleModel();
+            roleModel.setRoleName(user.getRoles().get(i).getRoleName());
+            roleList.add(roleModel);
+        }
+        return roleList;
+    }
+
 
 
     private String generateToken(Authentication authResult){

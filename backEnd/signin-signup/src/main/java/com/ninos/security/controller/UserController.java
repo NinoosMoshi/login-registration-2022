@@ -1,5 +1,6 @@
 package com.ninos.security.controller;
 
+import com.ninos.security.dto.AccountResponse;
 import com.ninos.security.dto.JwtLogin;
 import com.ninos.security.dto.LoginResponse;
 import com.ninos.security.jwt.filter.JwtAuthenticationFilter;
@@ -9,6 +10,7 @@ import com.ninos.security.service.RoleService;
 import com.ninos.security.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,14 +33,25 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public void register(@RequestBody JwtLogin jwtLogin){
-        User user = new User();
-        user.setEmail(jwtLogin.getEmail());
-        user.setPassword(passwordEncoder.encode(jwtLogin.getPassword()));
-        user.setActive(1);
-        user.getRoles().add(roleService.getAllRoles().get(0));
-        userService.addUser(user);
+    public AccountResponse register(@RequestBody JwtLogin jwtLogin){
+
+        AccountResponse accountResponse = new AccountResponse();
+        boolean result = userService.emailExists(jwtLogin.getEmail());
+        if(result){
+            accountResponse.setResult(0);
+        }else{
+            User user = new User();
+            user.setEmail(jwtLogin.getEmail());
+            user.setPassword(passwordEncoder.encode(jwtLogin.getPassword()));
+            user.setActive(1);
+            user.getRoles().add(roleService.getAllRoles().get(0));
+            userService.addUser(user);
+            accountResponse.setResult(1);
+        }
+        return accountResponse;
     }
+
+
 
 
 

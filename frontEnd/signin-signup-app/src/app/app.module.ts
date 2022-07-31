@@ -8,15 +8,21 @@ import { LoginComponent } from './components/security/login/login.component';
 import { RegistrationComponent } from './components/security/registration/registration.component';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { EmployeeComponent } from './components/employee/employee.component'
+import { HttpClientModule, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ProductComponent } from './components/product/product.component';
+import { LoginInterceptorService } from './services/security/interceptor/login-interceptor.service';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { CookieService } from 'ngx-cookie-service';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegistrationComponent,
-    EmployeeComponent
+    ProductComponent,
+    NavbarComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -26,7 +32,10 @@ import { EmployeeComponent } from './components/employee/employee.component'
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass:LoginInterceptorService, multi:true},
+    CookieService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

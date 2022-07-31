@@ -4,6 +4,7 @@
   align-items: center;
   justify-content: center;
   color: #0db8de;
+
 }
 
 
@@ -15,8 +16,7 @@ form {
 
 .login-form {
   width: 380px;
-  height: 561px;
-  margin: 20px;
+  height: 450px;
   background: #1a2226 !important;
   border-radius: 10px !important;
 }
@@ -57,22 +57,6 @@ input[type="password"] :focus {
   padding-top: 25px;
 }
 
-.social-media {
-  max-width: 400px;
-  background-color: #1a2226;
-  margin: auto;
-  padding: 30px 0;
-  text-align: center;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius:5px;
-  border-top: 1px solid #dee9ff;
-  margin-top: 30px;
-}
-
-.social-media a,i {
-  padding-right: 10px;
-  cursor: pointer;
-}
 
 
 .alert

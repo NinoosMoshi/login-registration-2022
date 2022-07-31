@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
           this.formParentGroup.controls['user'].value.password
         ).subscribe({
           next: response =>{
-            this.router.navigateByUrl("/employee")
+            this.router.navigateByUrl("/product")
           },
           error: err =>{
             alert("Invalid Credentails")

@@ -1,5 +1,6 @@
 package com.ninos.security.jwt;
 
+
 public class JwtProperties {
     public static final String SECRET = "MYSECRET";
     public static final int EXPIRATION_TIME = 864_000_000;  // 10 days
