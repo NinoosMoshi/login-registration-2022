@@ -28,14 +28,14 @@ public class ProductController {
     }
 
 
-    @PreAuthorize("hasRole('user')")
-    @GetMapping("/foruser")
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/forUser")
     public String forUser(){
          return "this is user only";
     }
 
-    @PreAuthorize("hasRole('admin')")
-    @GetMapping("/foradmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/forAdmin")
     public String forAdmin(){
         return "this is admin only";
     }
