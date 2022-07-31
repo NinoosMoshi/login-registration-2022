@@ -21,12 +21,24 @@ public class ProductController {
 
 
     // http://localhost:8080/api/v1/products
-    @PreAuthorize("hasRole('admin')")
+
     @GetMapping("/products")
     public List<ProductDTO> getAllProducts(){
          return productService.findAllProducts();
     }
 
+
+    @PreAuthorize("hasRole('user')")
+    @GetMapping("/foruser")
+    public String forUser(){
+         return "this is user only";
+    }
+
+    @PreAuthorize("hasRole('admin')")
+    @GetMapping("/foradmin")
+    public String forAdmin(){
+        return "this is admin only";
+    }
 
 
 
